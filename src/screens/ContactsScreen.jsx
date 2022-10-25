@@ -11,6 +11,8 @@ import { COLORS } from "../common/styles";
 import ContactItem from "../components/ContactItem";
 import SelectedContactItem from "../components/SelectedContactItem";
 import { Ionicons } from "@expo/vector-icons";
+import { useDispatch, useSelector } from "react-redux";
+import { getContactsAction } from "../Redux/actions/Types/contacts/getContactsAction";
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
@@ -18,45 +20,30 @@ const WINDOW_HEIGHT = Dimensions.get("window").height;
 const ContactsScreen = () => {
   const [selectedList, setSelectedList] = useState([]);
   const [filteredContactList, setFilteredContactList] = useState([]);
+  const [contacts, setContacts] = useState([]);
   const [searchValue, setSearchValue] = useState("");
-  const data = [
-    {
-      id: 1,
-      name: "Ahmed",
-      status: "Hi There!",
-      image: require("../../assets/images/profile1.jpg"),
-    },
-    {
-      id: 2,
-      name: "Adnan",
-      status: "Hi There!",
-      image: require("../../assets/images/profile1.jpg"),
-    },
-    {
-      id: 3,
-      name: "Saeed",
-      status: "Hi There!",
-      image: require("../../assets/images/profile1.jpg"),
-    },
-    {
-      id: 4,
-      name: "Ibrahim",
-      status: "Hi There!",
-      image: require("../../assets/images/profile1.jpg"),
-    },
-    {
-      id: 5,
-      name: "Ahmed Adnan",
-      status: "",
-      image: require("../../assets/images/profile1.jpg"),
-    },
-    {
-      id: 6,
-      name: "Adnan Ahmed",
-      status: "Hi There Hi There!",
-      image: require("../../assets/images/profile1.jpg"),
-    },
-  ];
+
+  const dispatch = useDispatch();
+  useEffect(() => {
+    dispatch(getContactsAction());
+  }, []);
+
+  const getContactsLoading = useSelector(
+    (state) => state.getContactsReducer.loading
+  );
+  const getContactsSuccess = useSelector(
+    (state) => state.getContactsReducer.success
+  );
+  const getContactsFailure = useSelector(
+    (state) => state.getContactsReducer.failure
+  );
+
+  useEffect(() => {
+    if (getContactsSuccess.length > 0) {
+      setFilteredContactList(getContactsSuccess);
+      setContacts(getContactsSuccess);
+    }
+  }, [getContactsSuccess]);
 
   //* rendering the contact list items
   const renderContactItem = ({ item }) => {
@@ -97,8 +84,8 @@ const ContactsScreen = () => {
     // Check if searched text is not blank
     if (text) {
       // Inserted text is not blank
-      // Filter the masterDataSource and update FilteredDataSource
-      const newData = data.filter(function (item) {
+      // Filter the contacts and update filteredContactList
+      const newData = contacts.filter(function (item) {
         // Applying filter for the inserted text in search bar
         const itemData = item.name ? item.name.toUpperCase() : "".toUpperCase();
         const textData = text.toUpperCase();
@@ -108,8 +95,8 @@ const ContactsScreen = () => {
       setSearchValue(text);
     } else {
       // Inserted text is blank
-      // Update FilteredDataSource with masterDataSource
-      setFilteredContactList(data);
+      // Update filteredContactList with data
+      setFilteredContactList(contacts);
       setSearchValue(text);
     }
   };
@@ -152,24 +139,26 @@ const ContactsScreen = () => {
       </View>
 
       {/* Contacts List Section */}
-      <View
-        style={{
-          ...styles.contactsContainer,
-          height: selectedList == "" ? "85%" : "72%",
-        }}
-      >
-        <FlatList
-          data={filteredContactList}
-          keyExtractor={(i) => i.id.toString()}
-          showsVerticalScrollIndicator={false}
-          renderItem={renderContactItem}
-          ListHeaderComponent={() => (
-            <View style={styles.listHeaderComponent}>
-              <Text style={styles.listHeaderText}>A</Text>
-            </View>
-          )}
-        />
-      </View>
+      {getContactsLoading ? null : (
+        <View
+          style={{
+            ...styles.contactsContainer,
+            height: selectedList == "" ? "85%" : "72%",
+          }}
+        >
+          <FlatList
+            data={filteredContactList}
+            keyExtractor={(i) => i.id.toString()}
+            showsVerticalScrollIndicator={false}
+            renderItem={renderContactItem}
+            ListHeaderComponent={() => (
+              <View style={styles.listHeaderComponent}>
+                <Text style={styles.listHeaderText}>A</Text>
+              </View>
+            )}
+          />
+        </View>
+      )}
     </View>
   );
 };

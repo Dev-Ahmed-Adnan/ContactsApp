@@ -27,7 +27,10 @@ const ContactItem = ({
 
   return (
     <View style={styles.contactItemContainer}>
-      <Image source={item.image} style={styles.contactImage} />
+      <Image
+        source={require("../../assets/images/profile.jpg")}
+        style={styles.contactImage}
+      />
       <View style={styles.contactData}>
         <Text style={styles.contactName}>{item.name}</Text>
         {item.status ? (

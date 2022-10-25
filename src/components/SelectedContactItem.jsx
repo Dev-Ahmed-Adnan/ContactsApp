@@ -15,7 +15,10 @@ const WINDOW_HEIGHT = Dimensions.get("window").height;
 const SelectedContactItem = ({ item, deselectAction = () => {} }) => {
   return (
     <View style={styles.selectedItemContainer}>
-      <Image source={item.image} style={styles.contactImage} />
+      <Image
+        source={require("../../assets/images/profile.jpg")}
+        style={styles.contactImage}
+      />
       <View style={{ height: "5%" }} />
       <Text style={styles.contactName} numberOfLines={1}>
         {item.name}
