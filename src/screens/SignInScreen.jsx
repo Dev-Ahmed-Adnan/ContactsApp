@@ -7,8 +7,11 @@ import {
   TextInput,
   ScrollView,
   TouchableOpacity,
+  KeyboardAvoidingView,
 } from "react-native";
 import { COLORS } from "../common/styles";
+import { useDispatch, useSelector } from "react-redux";
+import { signInAction } from "../Redux/actions/Types/AuthAction";
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
@@ -16,37 +19,60 @@ const WINDOW_HEIGHT = Dimensions.get("window").height;
 const SignInScreen = ({ navigation }) => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
+
+  const singInHandle = () => {
+    dispatch(signInAction(username, password));
+  };
+
+  const singInloading = useSelector((state) => state.authReducer.loading);
+  const singInSuccess = useSelector((state) => state.authReducer.success);
+  const singInEmail = useSelector((state) => state.authReducer.email);
+  const singInPassword = useSelector((state) => state.authReducer.password);
 
   return (
-    <ScrollView style={styles.scrollView}>
-      <View style={styles.screenContainer}>
-        <Text style={styles.title}>SignInScreen</Text>
-        <TextInput
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-          style={styles.authInput}
-          placeholderTextColor={COLORS.subtitleColor}
-          autoCorrect={false}
-        />
-        <TextInput
-          placeholder="Password"
-          value={password}
-          onChangeText={setPassword}
-          style={styles.authInput}
-          placeholderTextColor={COLORS.subtitleColor}
-          secureTextEntry
-          autoCorrect={false}
-          autoCapitalize={false}
-        />
-        <TouchableOpacity
-          style={styles.authButton}
-          onPress={() => navigation.navigate("Contacts")}
-        >
-          <Text style={styles.authButtonTitle}>Sign In</Text>
-        </TouchableOpacity>
-      </View>
-    </ScrollView>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.scrollView}
+    >
+      <ScrollView>
+        <View style={styles.screenContainer}>
+          <Text style={styles.title}>Sign In</Text>
+          <TextInput
+            placeholder="Username"
+            value={username}
+            onChangeText={setUsername}
+            style={styles.authInput}
+            placeholderTextColor={COLORS.subtitleColor}
+            autoCorrect={false}
+          />
+          <TextInput
+            placeholder="Password"
+            value={password}
+            onChangeText={setPassword}
+            style={styles.authInput}
+            placeholderTextColor={COLORS.subtitleColor}
+            secureTextEntry
+            autoCorrect={false}
+            autoCapitalize={false}
+          />
+          <TouchableOpacity
+            style={styles.authButton}
+            onPress={() => singInHandle()}
+            // onPress={() => navigation.navigate("Contacts")}
+          >
+            <Text style={styles.authButtonTitle}>Sign In</Text>
+          </TouchableOpacity>
+
+          <View style={styles.subtitleContainer}>
+            <Text style={styles.subTitle}>Don't Have Account?</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Sign Up")}>
+              <Text style={styles.subTitleButton}>Sign Up</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 };
 
@@ -92,5 +118,20 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: WINDOW_WIDTH / 24,
     fontWeight: "600",
+  },
+  subtitleContainer: {
+    flexDirection: "row",
+    marginTop: 20,
+  },
+  subTitle: {
+    color: "white",
+    fontSize: WINDOW_WIDTH / 30,
+    fontWeight: "400",
+  },
+  subTitleButton: {
+    color: "rgba(29, 126, 191,1)",
+    fontSize: WINDOW_WIDTH / 30,
+    fontWeight: "400",
+    marginLeft: 10,
   },
 });

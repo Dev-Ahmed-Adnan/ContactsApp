@@ -6,6 +6,7 @@ import {
   Dimensions,
   FlatList,
   TextInput,
+  TouchableOpacity,
 } from "react-native";
 import { COLORS } from "../common/styles";
 import ContactItem from "../components/ContactItem";
@@ -13,6 +14,7 @@ import SelectedContactItem from "../components/SelectedContactItem";
 import { Ionicons } from "@expo/vector-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { getContactsAction } from "../Redux/actions/Types/contacts/getContactsAction";
+import { logoutAction } from "../Redux/actions/Types/AuthAction";
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
@@ -120,6 +122,12 @@ const ContactsScreen = () => {
             placeholderTextColor={COLORS.subtitleColor}
           />
         </View>
+        <TouchableOpacity
+          style={styles.logoutContainer}
+          onPress={() => dispatch(logoutAction())}
+        >
+          <Text style={styles.logoutButton}>Logout</Text>
+        </TouchableOpacity>
       </View>
 
       {/* Selected Contacts Section */}
@@ -193,6 +201,16 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: WINDOW_WIDTH / 25,
     flex: 1,
+  },
+  logoutContainer: {
+    position: "absolute",
+    bottom: WINDOW_HEIGHT / 14,
+    right: 20,
+  },
+  logoutButton: {
+    color: "rgba(29, 126, 191,1)",
+    fontSize: WINDOW_WIDTH / 28,
+    fontWeight: "500",
   },
   selectedContactsContainer: {
     width: "100%",

@@ -1,5 +1,5 @@
 const INITIAL_STATE = {
-  loading: true,
+  loading: false,
   success: [],
   failure: {},
   next: null,
@@ -12,7 +12,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         success: {},
         failure: false,
-        loading: false,
+        loading: true,
         next: null,
       };
 
@@ -30,7 +30,7 @@ export default (state = INITIAL_STATE, action) => {
         ...state,
         success: {},
         failure: true,
-        loading: true,
+        loading: false,
         next: null,
       };
     default:

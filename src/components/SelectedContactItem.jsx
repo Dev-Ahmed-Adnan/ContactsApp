@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     width: WINDOW_WIDTH / 6.5,
     height: WINDOW_WIDTH / 6.5,
     resizeMode: "cover",
-    borderRadius: "80%",
+    borderRadius: WINDOW_WIDTH / 6.5,
   },
   contactName: {
     color: "white",
