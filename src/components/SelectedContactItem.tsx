@@ -1,4 +1,4 @@
-import React from "react";
+import React, { FC } from "react";
 import {
   StyleSheet,
   Text,
@@ -12,7 +12,12 @@ import { Ionicons } from "@expo/vector-icons";
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
-const SelectedContactItem = ({ item, deselectAction = () => {} }) => {
+interface Props {
+  item: Contact | undefined;
+  deselectAction: (item: Contact) => void;
+}
+
+const SelectedContactItem: FC<Props> = ({ item, deselectAction }) => {
   return (
     <View style={styles.selectedItemContainer}>
       <Image

@@ -12,7 +12,9 @@ import { COLORS } from "../common/styles";
 import ContactItem from "../components/ContactItem";
 import SelectedContactItem from "../components/SelectedContactItem";
 import { Ionicons } from "@expo/vector-icons";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "redux";
+import { useTypedSelector } from "../Redux/store/useTypeSelector";
 import { getContactsAction } from "../Redux/actions/Types/contacts/getContactsAction";
 import { logoutAction } from "../Redux/actions/Types/AuthAction";
 
@@ -20,23 +22,25 @@ const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 const ContactsScreen = () => {
-  const [selectedList, setSelectedList] = useState([]);
-  const [filteredContactList, setFilteredContactList] = useState([]);
-  const [contacts, setContacts] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
+  const [selectedList, setSelectedList] = useState<Contact[] | null>([]);
+  const [filteredContactList, setFilteredContactList] = useState<
+    Contact[] | null
+  >([]);
+  const [contacts, setContacts] = useState<Contact[] | null | undefined>([]);
+  const [searchValue, setSearchValue] = useState<string>("");
 
-  const dispatch = useDispatch();
+  const dispatch: Dispatch<any> = useDispatch();
   useEffect(() => {
     dispatch(getContactsAction());
   }, []);
 
-  const getContactsLoading = useSelector(
+  const getContactsLoading: boolean = useTypedSelector(
     (state) => state.getContactsReducer.loading
   );
-  const getContactsSuccess = useSelector(
+  const getContactsSuccess = useTypedSelector(
     (state) => state.getContactsReducer.success
   );
-  const getContactsFailure = useSelector(
+  const getContactsFailure = useTypedSelector(
     (state) => state.getContactsReducer.failure
   );
 
@@ -82,7 +86,7 @@ const ContactsScreen = () => {
   };
 
   //* Search Handling
-  const searchFilterFunction = (text) => {
+  const searchFilterFunction = (text: string) => {
     // Check if searched text is not blank
     if (text) {
       // Inserted text is not blank
@@ -134,7 +138,7 @@ const ContactsScreen = () => {
       <View
         style={{
           ...styles.selectedContactsContainer,
-          height: selectedList == "" ? 0 : "13%",
+          height: selectedList.length < 1 ? 0 : "13%",
         }}
       >
         <FlatList
@@ -151,7 +155,7 @@ const ContactsScreen = () => {
         <View
           style={{
             ...styles.contactsContainer,
-            height: selectedList == "" ? "85%" : "72%",
+            height: selectedList.length < 1 ? "85%" : "72%",
           }}
         >
           <FlatList

@@ -1,16 +1,20 @@
 import React, { useEffect } from "react";
 import { StyleSheet, ActivityIndicator, View } from "react-native";
 import { useDispatch, useSelector } from "react-redux";
+import { useTypedSelector } from "../Redux/store/useTypeSelector";
+import { Dispatch } from "redux";
 import { checkUserAction } from "../Redux/actions/Types/AuthAction";
 import { COLORS } from "../common/styles";
 
 const SplashScreen = ({ navigation }) => {
-  const dispatch = useDispatch();
+  const dispatch: Dispatch<any> = useDispatch();
   useEffect(() => {
     dispatch(checkUserAction());
   }, []);
 
-  const checkUserSuccess = useSelector((state) => state.authReducer.success);
+  const checkUserSuccess = useTypedSelector(
+    (state) => state.authReducer.success
+  );
 
   useEffect(() => {
     if (checkUserAction) {

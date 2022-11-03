@@ -1,37 +1,35 @@
-const INITIAL_STATE = {
+import * as actionTypes from "../../actions/actionTypes";
+
+const INITIAL_STATE: State = {
   loading: false,
   success: [],
-  failure: {},
-  next: null,
+  failure: false,
 };
 
-export default (state = INITIAL_STATE, action) => {
+export default (state: State = INITIAL_STATE, action: Action) => {
   switch (action.type) {
-    case "GET_CONTACTS_ATTEMPT":
+    case actionTypes.GET_CONTACTS_ATTEMPT:
       return {
         ...state,
-        success: {},
+        success: [],
         failure: false,
         loading: true,
-        next: null,
       };
 
-    case "GET_CONTACTS_SUCCESS":
+    case actionTypes.GET_CONTACTS_SUCCESS:
       return {
         ...state,
         success: action.data,
-        failure: {},
+        failure: false,
         loading: false,
-        next: action.next,
       };
 
-    case "GET_CONTACTS_FAIL":
+    case actionTypes.GET_CONTACTS_FAIL:
       return {
         ...state,
-        success: {},
+        success: [],
         failure: true,
         loading: false,
-        next: null,
       };
     default:
       return state;

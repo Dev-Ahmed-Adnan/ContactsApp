@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, FC } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,11 +13,13 @@ import { AntDesign } from "@expo/vector-icons";
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
-const ContactItem = ({
-  item,
-  selectAction = () => {},
-  deselectAction = () => {},
-}) => {
+interface Props {
+  item: { name: string; status: string };
+  selectAction: (item: Contact) => void;
+  deselectAction: (item: Contact) => void;
+}
+
+const ContactItem: FC<Props> = ({ item, selectAction, deselectAction }) => {
   const [selected, setSelected] = useState(false);
 
   const selectionTriger = () => {

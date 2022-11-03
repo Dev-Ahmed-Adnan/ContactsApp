@@ -1,110 +1,122 @@
-const INITIAL_STATE = {
+import * as actionTypes from "../actions/actionTypes";
+
+const INITIAL_STATE: State = {
   loading: true,
   success: false,
-
+  failure: false,
   email: null,
 };
 
-export default (state = INITIAL_STATE, action) => {
+export default (state: State = INITIAL_STATE, action: Action) => {
   switch (action.type) {
     //* REGISTER REDUCER
-    case "SIGNUP_ATTEMPT":
+    case actionTypes.SIGNUP_ATTEMPT:
       return {
         ...state,
         success: false,
         loading: true,
+        failure: false,
         email: null,
-        password: null,
       };
 
-    case "SIGNUP_SUCCESS":
+    case actionTypes.SIGNUP_SUCCESS:
       return {
         ...state,
         success: true,
         loading: false,
+        failure: false,
         email: action.data,
       };
 
-    case "SIGNUP_FAIL":
+    case actionTypes.SIGNUP_FAIL:
       return {
         ...state,
         success: false,
         loading: false,
         email: null,
-        password: null,
+        failure: true,
       };
 
     //* SIGN IN REDUCER
-    case "SIGNIN_ATTEMPT":
+    case actionTypes.SIGNIN_ATTEMPT:
       return {
         ...state,
         success: false,
+        failure: false,
         loading: true,
         email: null,
       };
 
-    case "SIGNIN_SUCCESS":
+    case actionTypes.SIGNIN_SUCCESS:
       return {
         ...state,
         success: true,
+        failure: false,
         loading: false,
         email: action.data,
       };
 
-    case "SIGNIN_FAIL":
+    case actionTypes.SIGNIN_FAIL:
       return {
         ...state,
         success: false,
+        failure: true,
         loading: false,
         email: null,
       };
 
     //* CHCEK USER REDUCER
-    case "CHECK_USER_ATTEMPT":
+    case actionTypes.CHECK_USER_ATTEMPT:
       return {
         ...state,
         success: false,
+        failure: false,
         loading: true,
         email: null,
       };
 
-    case "CHECK_USER_SUCCESS":
+    case actionTypes.CHECK_USER_SUCCESS:
       return {
         ...state,
         success: action.data ? true : false,
+        failure: false,
         loading: false,
         email: action.data,
       };
 
-    case "CHECK_USER_FAIL":
+    case actionTypes.CHECK_USER_FAIL:
       return {
         ...state,
         success: false,
+        failure: true,
         loading: false,
         email: null,
       };
 
     //* LOGOUT REDUCER
-    case "LOGOUT_ATTEMPT":
+    case actionTypes.LOGOUT_ATTEMPT:
       return {
         ...state,
         success: true,
+        failure: false,
         loading: true,
         email: null,
       };
 
-    case "LOGOUT_SUCCESS":
+    case actionTypes.LOGOUT_SUCCESS:
       return {
         ...state,
         success: false,
+        failure: false,
         loading: false,
         email: null,
       };
 
-    case "LOGOUT_FAIL":
+    case actionTypes.LOGOUT_FAIL:
       return {
         ...state,
         success: true,
+        failure: true,
         loading: false,
         email: null,
       };

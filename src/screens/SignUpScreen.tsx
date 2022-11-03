@@ -9,25 +9,27 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { COLORS } from "../common/styles";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "redux";
+import { useTypedSelector } from "../Redux/store/useTypeSelector";
 import { signUpAction } from "../Redux/actions/Types/AuthAction";
+import Input from "../components/Input";
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 const SignUpScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
+  const [username, setUsername] = useState<string | undefined | null>("");
+  const [password, setPassword] = useState<string | undefined | null>("");
+  const dispatch: Dispatch<any> = useDispatch();
 
   const singInHandle = () => {
     dispatch(signUpAction(username, password));
   };
 
-  const singUploading = useSelector((state) => state.authReducer.loading);
-  const singUpSuccess = useSelector((state) => state.authReducer.success);
-  const singUpEmail = useSelector((state) => state.authReducer.email);
-  const singUpPassword = useSelector((state) => state.authReducer.password);
+  const singUploading = useTypedSelector((state) => state.authReducer.loading);
+  const singUpSuccess = useTypedSelector((state) => state.authReducer.success);
+  const singUpEmail = useTypedSelector((state) => state.authReducer.email);
 
   useEffect(() => {
     if (singUpSuccess) {
@@ -39,23 +41,16 @@ const SignUpScreen = ({ navigation }) => {
     <ScrollView style={styles.scrollView}>
       <View style={styles.screenContainer}>
         <Text style={styles.title}>Register</Text>
-        <TextInput
+        <Input
+          onChangeText={setUsername}
           placeholder="Username"
           value={username}
-          onChangeText={setUsername}
-          style={styles.authInput}
-          placeholderTextColor={COLORS.subtitleColor}
-          autoCorrect={false}
         />
-        <TextInput
+        <Input
+          onChangeText={setPassword}
           placeholder="Password"
           value={password}
-          onChangeText={setPassword}
-          style={styles.authInput}
-          placeholderTextColor={COLORS.subtitleColor}
-          secureTextEntry
-          autoCorrect={false}
-          autoCapitalize={false}
+          isPassword
         />
         <TouchableOpacity
           style={styles.authButton}

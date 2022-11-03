@@ -4,31 +4,28 @@ import {
   Text,
   View,
   Dimensions,
-  TextInput,
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
+  Platform,
 } from "react-native";
 import { COLORS } from "../common/styles";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "redux";
 import { signInAction } from "../Redux/actions/Types/AuthAction";
+import Input from "../components/Input";
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 const SignInScreen = ({ navigation }) => {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const dispatch = useDispatch();
+  const [username, setUsername] = useState<string | null | undefined>("");
+  const [password, setPassword] = useState<string | null | undefined>("");
+  const dispatch: Dispatch<any> = useDispatch();
 
   const singInHandle = () => {
     dispatch(signInAction(username, password));
   };
-
-  const singInloading = useSelector((state) => state.authReducer.loading);
-  const singInSuccess = useSelector((state) => state.authReducer.success);
-  const singInEmail = useSelector((state) => state.authReducer.email);
-  const singInPassword = useSelector((state) => state.authReducer.password);
 
   return (
     <KeyboardAvoidingView
@@ -38,28 +35,20 @@ const SignInScreen = ({ navigation }) => {
       <ScrollView>
         <View style={styles.screenContainer}>
           <Text style={styles.title}>Sign In</Text>
-          <TextInput
+          <Input
+            onChangeText={setUsername}
             placeholder="Username"
             value={username}
-            onChangeText={setUsername}
-            style={styles.authInput}
-            placeholderTextColor={COLORS.subtitleColor}
-            autoCorrect={false}
           />
-          <TextInput
+          <Input
+            onChangeText={setPassword}
             placeholder="Password"
             value={password}
-            onChangeText={setPassword}
-            style={styles.authInput}
-            placeholderTextColor={COLORS.subtitleColor}
-            secureTextEntry
-            autoCorrect={false}
-            autoCapitalize={false}
+            isPassword
           />
           <TouchableOpacity
             style={styles.authButton}
             onPress={() => singInHandle()}
-            // onPress={() => navigation.navigate("Contacts")}
           >
             <Text style={styles.authButtonTitle}>Sign In</Text>
           </TouchableOpacity>
