@@ -1,4 +1,4 @@
-import React, { useState, FC } from "react";
+import React, { useState, FC, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,23 +9,42 @@ import {
 } from "react-native";
 import { COLORS } from "../common/styles";
 import { AntDesign } from "@expo/vector-icons";
+import { useTypedSelector } from "../Redux/store/useTypeSelector";
+import { selectedContactsAction } from "../Redux/actions/Types/contacts/selectedContactsAction";
+import { useDispatch } from "react-redux";
+import { Dispatch } from "redux";
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 interface Props {
-  item: { name: string; status: string };
+  item: Contact;
   selectAction: (item: Contact) => void;
   deselectAction: (item: Contact) => void;
 }
 
 const ContactItem: FC<Props> = ({ item, selectAction, deselectAction }) => {
   const [selected, setSelected] = useState(false);
+  const dispatch: Dispatch<any> = useDispatch();
 
   const selectionTriger = () => {
-    !selected ? selectAction(item) : deselectAction(item);
-    setSelected(!selected);
+    if (!selected) {
+      // selectAction(item);
+      dispatch(selectedContactsAction(item, "add"));
+    } else {
+      // deselectAction(item);
+      dispatch(selectedContactsAction(item, "remove"));
+    }
   };
+
+  const selectedContactList: Contact[] = useTypedSelector(
+    (state) => state.selectedContactsReducer.success
+  );
+
+  useEffect(() => {
+    const newItem = selectedContactList.find((i) => i.id == item.id);
+    newItem ? setSelected(true) : setSelected(false);
+  }, [selectedContactList]);
 
   return (
     <View style={styles.contactItemContainer}>

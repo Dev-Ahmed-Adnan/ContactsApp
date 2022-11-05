@@ -7,6 +7,7 @@ import {
   FlatList,
   TextInput,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { COLORS } from "../common/styles";
 import ContactItem from "../components/ContactItem";
@@ -16,13 +17,13 @@ import { useDispatch } from "react-redux";
 import { Dispatch } from "redux";
 import { useTypedSelector } from "../Redux/store/useTypeSelector";
 import { getContactsAction } from "../Redux/actions/Types/contacts/getContactsAction";
+import { selectedContactsAction } from "../Redux/actions/Types/contacts/selectedContactsAction";
 import { logoutAction } from "../Redux/actions/Types/AuthAction";
 
 const WINDOW_WIDTH = Dimensions.get("window").width;
 const WINDOW_HEIGHT = Dimensions.get("window").height;
 
 const ContactsScreen = () => {
-  const [selectedList, setSelectedList] = useState<Contact[] | null>([]);
   const [filteredContactList, setFilteredContactList] = useState<
     Contact[] | null
   >([]);
@@ -37,12 +38,17 @@ const ContactsScreen = () => {
   const getContactsLoading: boolean = useTypedSelector(
     (state) => state.getContactsReducer.loading
   );
-  const getContactsSuccess = useTypedSelector(
+  const getContactsSuccess: Contact[] = useTypedSelector(
     (state) => state.getContactsReducer.success
   );
-  const getContactsFailure = useTypedSelector(
-    (state) => state.getContactsReducer.failure
+
+  const selectedContactList: Contact[] = useTypedSelector(
+    (state) => state.selectedContactsReducer.success
   );
+
+  // useEffect(() => {
+  //   console.log("selectedItemsRedux ===>", selectedContactList[0]);
+  // }, [selectedContactList]);
 
   useEffect(() => {
     if (getContactsSuccess.length > 0) {
@@ -57,14 +63,10 @@ const ContactsScreen = () => {
       <ContactItem
         item={item}
         selectAction={(item) => {
-          var temp = [...selectedList, item];
-          setSelectedList(temp);
+          dispatch(selectedContactsAction(item, "add"));
         }}
         deselectAction={(item) => {
-          var temp = [...selectedList];
-          var index = temp.indexOf(item);
-          temp.splice(index, 1);
-          setSelectedList(temp);
+          dispatch(selectedContactsAction(item, "remove"));
         }}
       />
     );
@@ -76,10 +78,7 @@ const ContactsScreen = () => {
       <SelectedContactItem
         item={item}
         deselectAction={(item) => {
-          var temp = [...selectedList];
-          var index = temp.indexOf(item);
-          temp.splice(index, 1);
-          setSelectedList(temp);
+          dispatch(selectedContactsAction(item, "remove"));
         }}
       />
     );
@@ -138,11 +137,11 @@ const ContactsScreen = () => {
       <View
         style={{
           ...styles.selectedContactsContainer,
-          height: selectedList.length < 1 ? 0 : "13%",
+          height: selectedContactList.length < 1 ? 0 : "13%",
         }}
       >
         <FlatList
-          data={selectedList}
+          data={selectedContactList}
           keyExtractor={(i) => i.id.toString()}
           showsHorizontalScrollIndicator={false}
           horizontal
@@ -151,11 +150,15 @@ const ContactsScreen = () => {
       </View>
 
       {/* Contacts List Section */}
-      {getContactsLoading ? null : (
+      {getContactsLoading ? (
+        <View style={styles.container}>
+          <ActivityIndicator size={"large"} color="white" />
+        </View>
+      ) : getContactsSuccess ? (
         <View
           style={{
             ...styles.contactsContainer,
-            height: selectedList.length < 1 ? "85%" : "72%",
+            height: selectedContactList.length < 1 ? "85%" : "72%",
           }}
         >
           <FlatList
@@ -169,6 +172,12 @@ const ContactsScreen = () => {
               </View>
             )}
           />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <Text style={{ fontSize: 20, color: "white" }}>
+            Something Went Wrong!
+          </Text>
         </View>
       )}
     </View>
@@ -234,5 +243,10 @@ const styles = StyleSheet.create({
     color: "white",
     fontSize: WINDOW_WIDTH / 22,
     fontWeight: "600",
+  },
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });

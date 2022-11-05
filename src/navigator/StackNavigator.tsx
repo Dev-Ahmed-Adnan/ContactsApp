@@ -9,14 +9,14 @@ import SignUpScreen from "../screens/SignUpScreen";
 const Stack = createNativeStackNavigator();
 
 const StackNavigator = () => {
-  const singUpSuccess = useTypedSelector((state) => state.authReducer.success);
+  const loggedIn = useTypedSelector((state) => state.authReducer.loggedIn);
 
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false }}
       initialRouteName="Splash"
     >
-      {!singUpSuccess ? (
+      {!loggedIn ? (
         <>
           <Stack.Screen name="Sign In" component={SignInScreen} />
           <Stack.Screen name="Sign Up" component={SignUpScreen} />

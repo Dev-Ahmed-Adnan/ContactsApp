@@ -2,7 +2,8 @@ import * as actionTypes from "../actions/actionTypes";
 
 const INITIAL_STATE: State = {
   loading: true,
-  success: false,
+  success: [],
+  loggedIn: false,
   failure: false,
   email: null,
 };
@@ -13,7 +14,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.SIGNUP_ATTEMPT:
       return {
         ...state,
-        success: false,
+        loggedIn: false,
         loading: true,
         failure: false,
         email: null,
@@ -22,7 +23,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.SIGNUP_SUCCESS:
       return {
         ...state,
-        success: true,
+        loggedIn: true,
         loading: false,
         failure: false,
         email: action.data,
@@ -31,7 +32,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.SIGNUP_FAIL:
       return {
         ...state,
-        success: false,
+        loggedIn: false,
         loading: false,
         email: null,
         failure: true,
@@ -41,7 +42,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.SIGNIN_ATTEMPT:
       return {
         ...state,
-        success: false,
+        loggedIn: false,
         failure: false,
         loading: true,
         email: null,
@@ -50,7 +51,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.SIGNIN_SUCCESS:
       return {
         ...state,
-        success: true,
+        loggedIn: true,
         failure: false,
         loading: false,
         email: action.data,
@@ -59,7 +60,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.SIGNIN_FAIL:
       return {
         ...state,
-        success: false,
+        loggedIn: false,
         failure: true,
         loading: false,
         email: null,
@@ -69,7 +70,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.CHECK_USER_ATTEMPT:
       return {
         ...state,
-        success: false,
+        loggedIn: false,
         failure: false,
         loading: true,
         email: null,
@@ -78,7 +79,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.CHECK_USER_SUCCESS:
       return {
         ...state,
-        success: action.data ? true : false,
+        loggedIn: action.data ? true : false,
         failure: false,
         loading: false,
         email: action.data,
@@ -87,7 +88,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.CHECK_USER_FAIL:
       return {
         ...state,
-        success: false,
+        loggedIn: false,
         failure: true,
         loading: false,
         email: null,
@@ -97,7 +98,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.LOGOUT_ATTEMPT:
       return {
         ...state,
-        success: true,
+        loggedIn: true,
         failure: false,
         loading: true,
         email: null,
@@ -106,7 +107,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.LOGOUT_SUCCESS:
       return {
         ...state,
-        success: false,
+        loggedIn: false,
         failure: false,
         loading: false,
         email: null,
@@ -115,7 +116,7 @@ export default (state: State = INITIAL_STATE, action: Action) => {
     case actionTypes.LOGOUT_FAIL:
       return {
         ...state,
-        success: true,
+        loggedIn: true,
         failure: true,
         loading: false,
         email: null,
